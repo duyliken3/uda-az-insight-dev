@@ -88,9 +88,9 @@ else:
     title = app.config["TITLE"]
 
 # Redis Connection to a local server running on the same machine where the current FLask app is running.
-r = redis.Redis()
+# r = redis.Redis()
 
-"""
+
 # The commented section below is used while deploying the application with two separate containers - 
 # One container for Redis and another for the frontend. 
 # Redis configurations
@@ -105,7 +105,7 @@ try:
     r.ping()
 except redis.ConnectionError:
     exit('Failed to connect to Redis, terminating.')
-"""
+
 
 # Change title to host name to demo NLB
 if app.config["SHOWHOST"] == "true":
@@ -123,12 +123,10 @@ def index():
     if request.method == "GET":
         # Get current values
         vote1 = r.get(button1).decode("utf-8")
-        # TODO: use tracer object to trace cat vote
         with tracer.span(name="Cats Vote") as span:
             print("Cats Vote")
 
         vote2 = r.get(button2).decode("utf-8")
-        # TODO: use tracer object to trace dog vote
         with tracer.span(name="Dogs Vote") as span:
             print("Dogs Vote")
 
@@ -150,12 +148,10 @@ def index():
 
             vote1 = r.get(button1).decode("utf-8")
             properties = {"custom_dimensions": {"Cats Vote": vote1}}
-            # TODO: use logger object to log cat vote
             logger.info("Cats Vote", extra=properties)
 
             vote2 = r.get(button2).decode("utf-8")
             properties = {"custom_dimensions": {"Dogs Vote": vote2}}
-            # TODO: use logger object to log dog vote
             logger.info("Dogs Vote", extra=properties)
 
             return render_template(
@@ -175,12 +171,10 @@ def index():
             # Get current values
             vote1 = r.get(button1).decode("utf-8")
             properties = {"custom_dimensions": {"Cats Vote": vote1}}
-            # TODO: use logger object to log cat vote
             logger.info("Cats Vote", extra=properties)
 
             vote2 = r.get(button2).decode("utf-8")
             properties = {"custom_dimensions": {"Dogs Vote": vote2}}
-            # TODO: use logger object to log dog vote
             logger.info("Dogs Vote", extra=properties)
 
             # Return results
